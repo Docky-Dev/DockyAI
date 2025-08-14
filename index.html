@@ -124,9 +124,16 @@
       transform: translateY(0);
     }
     
-    .sidebar-menu {
-      padding: 12px 0;
-    }
+.sidebar-menu .new-chat-btn {
+  justify-content: flex-start;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.sidebar-menu .new-chat-btn:hover {
+  background: var(--bg-primary);
+  color: white;
+}
     
     .menu-item {
       display: flex;
@@ -809,7 +816,7 @@
           DockyAI
         </div>
       </div>
-      
+
 <div class="sidebar-menu">
   <button class="new-chat-btn menu-item" id="new-chat-btn" style="margin: 12px; width: calc(100% - 24px);">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -817,13 +824,18 @@
     </svg>
     New chat
   </button>
-  <a href="#" class="menu-item">
+  <button class="menu-item">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M4 7V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3"/>
     </svg>
     Soon (Not Available)
-  </a>
+  </button>
 </div>
+      
+      <div class="chat-list">
+        <div id="chat-list"></div>
+      </div>
+    </div>
     
     <div class="main-content">
       <div class="main-header">
