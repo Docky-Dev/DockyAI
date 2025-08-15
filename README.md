@@ -19,6 +19,8 @@ DockyAI is a modern platform that centralizes access to around twenty different 
 ## Screenshot
 
 <img width="1518" height="973" alt="image" src="https://github.com/user-attachments/assets/954c7296-ecbe-4505-88aa-0a72605d7fa1" />
+<img width="376" height="476" alt="image" src="https://github.com/user-attachments/assets/127e0ccd-f13e-4fdf-aa58-301da01b40bb" />
+<img width="322" height="496" alt="image" src="https://github.com/user-attachments/assets/258d9a31-17fd-4d95-84ba-70fadddb9ec7" />
 
 
 ## Installation
