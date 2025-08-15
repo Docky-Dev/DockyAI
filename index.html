@@ -794,6 +794,54 @@
     background: rgba(59, 130, 246, 0.1);
     color: var(--accent-primary);
   }
+
+  .sidebar-menu .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-medium);
+    text-align: left;
+    margin: 4px 0;
+  }
+  .sidebar-menu .menu-item:hover {
+    background: var(--accent-hover);
+    color: white;
+  }
+  .sidebar-menu .menu-item:active {
+    background: var(--accent-primary);
+    color: white;
+  }
+  .sidebar-menu .menu-item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+  }
+  .sidebar-menu .new-chat-btn {
+    /* retire le style spécifique, hérite de .menu-item */
+    position: center !important;
+    background: var(--primary);
+    color: white;
+    margin: 4px 0;
+    width: 90%;
+    border-radius: 15px;
+    font-weight: 600;
+  }
+  .sidebar-menu .new-chat-btn:hover {
+    color: white;
+  }
+  .sidebar-menu .new-chat-btn:active {
+    color: white;
+  }
   </style>
 </head>
 <body>
@@ -818,17 +866,11 @@
       </div>
 
 <div class="sidebar-menu">
-  <button class="new-chat-btn menu-item" id="new-chat-btn" style="margin: 12px; width: calc(100% - 24px);">
+  <button class="new-chat-btn menu-item" id="new-chat-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
     New chat
-  </button>
-  <button class="menu-item">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M4 7V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3"/>
-    </svg>
-    Soon (Not Available)
   </button>
 </div>
       
