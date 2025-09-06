@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DockyAI</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:," />
   <style>
     :root {
       --bg-primary: #0f172a;
@@ -957,7 +956,7 @@
   </div>
 
   <script>
-    const apiKey = "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";
+    const apiKey = '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';
     const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
     
     // Available models
@@ -1365,42 +1364,29 @@
       const messageInput = document.getElementById('message-input');
       const sendButton = document.getElementById('send-button');
       const typingIndicator = document.getElementById('typing-indicator');
-
+      
       if (!messageInput || !sendButton || !typingIndicator) return;
-
+      
       const message = messageInput.value.trim();
       if (!message) return;
-
+      
       const currentConv = conversations[currentConversationId];
       if (!currentConv) return;
-
+      
       // Add user message
       const userMessage = { role: 'user', content: message };
       currentConv.messages.push(userMessage);
       addMessageToUI(userMessage);
-
+      
       // Clear input and disable send button
       messageInput.value = '';
       messageInput.style.height = 'auto';
       sendButton.disabled = true;
-
+      
       // Show typing indicator
       typingIndicator.classList.add('active');
       scrollToBottom();
-
-      // Block API call and show error message
-      setTimeout(() => {
-        const errorMessage = {
-          role: 'assistant',
-          content: 'Sorry, DockyAI is currently unavailable. Please try again later.'
-        };
-        currentConv.messages.push(errorMessage);
-        addMessageToUI(errorMessage);
-        typingIndicator.classList.remove('active');
-        scrollToBottom();
-        saveConversations();
-      }, 1000);
-
+      
       try {
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -1415,31 +1401,31 @@
             messages: currentConv.messages
           })
         });
-
+        
         if (!response.ok) {
           throw new Error(`API request failed with status ${response.status}`);
         }
-
+        
         const data = await response.json();
-
+        
         if (!data.choices || !data.choices[0]) {
           throw new Error('Invalid response format from API');
         }
-
+        
         const assistantMessage = {
           role: 'assistant',
           content: data.choices[0].message?.content || "Sorry, I couldn't generate a response."
         };
-
+        
         currentConv.messages.push(assistantMessage);
         addMessageToUI(assistantMessage);
-
+        
         // Update conversation name if this is the first message
         if (currentConv.messages.length === 2) {
           currentConv.name = message.slice(0, 30) + (message.length > 30 ? '...' : '');
           renderChatList();
         }
-
+        
       } catch (error) {
         console.error('Error:', error);
         const errorMessage = {
