@@ -1,105 +1,80 @@
-name: MrBeast Subscriber Tracker with Auto Release
+name: Auto Release
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
-  fetch_subs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Fetch subscriber count
-        run: |
-          curl -s https://backend.mixerno.space/api/youtube/estv3/UCX6OQ3DkcsbYNE6H8uQQuVA \
-          | jq '{subscriberCount: .items[0].statistics.subscriberCount}' > mrbeast.json
-
-      - name: Commit and push subscriber count
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git reset --hard origin/main
-          git add mrbeast.json
-          # Vérifier s'il y a des changements avant de committer
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update subscriber count [skip ci]"
-            git push origin main
-          fi
-
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
 
-      - name: Read and bump version
-        id: version
-        run: |
-          set -e
-          VERSION_FILE="vertion.json"
+    - name: Read and bump version
+      id: version
+      run: |
+        set -e  # Stoppe si erreur
+        VERSION_FILE="vertion.json"
 
-          if [ ! -f $VERSION_FILE ]; then
-            echo '{"version":"V1.0.0"}' > $VERSION_FILE
-            echo "$VERSION_FILE created with version V1.0.0"
-          fi
+        # Créer vertion.json si absent
+        if [ ! -f $VERSION_FILE ]; then
+          echo '{"vertion":"V0.9.9"}' > $VERSION_FILE
+          echo "$VERSION_FILE created with version V1.0.0"
+        fi
 
-          version=$(node -pe "require('./$VERSION_FILE').version")
-          echo "Current version: $version"
+        # Lire version actuelle
+        version=$(node -pe "require('./$VERSION_FILE').vertion")
+        echo "Current version: $version"
 
-          version_numbers=${version#V}
-          IFS='.' read -r major minor patch <<< "$version_numbers"
+        # Supprimer 'V' et séparer en majeur, mineur, patch
+        version_numbers=${version#V}
+        IFS='.' read -r major minor patch <<< "$version_numbers"
 
-          patch=$((patch + 1))
+        # Incrémenter patch
+        patch=$((patch + 1))
 
-          if [ $patch -gt 9 ]; then
-            patch=0
-            minor=$((minor + 1))
-          fi
-          if [ $minor -gt 9 ]; then
-            minor=0
-            major=$((major + 1))
-          fi
+        # Gestion overflow
+        if [ $patch -gt 9 ]; then
+          patch=0
+          minor=$((minor + 1))
+        fi
+        if [ $minor -gt 9 ]; then
+          minor=0
+          major=$((major + 1))
+        fi
 
-          new_version="V$major.$minor.$patch"
-          echo "New version: $new_version"
+        new_version="V$major.$minor.$patch"
+        echo "New version: $new_version"
 
-          node -e "const fs = require('fs'); const data = {version:'$new_version'}; fs.writeFileSync('$VERSION_FILE', JSON.stringify(data, null, 2));"
+        # Mettre à jour vertion.json proprement
+        node -e "const fs = require('fs'); const data = {vertion:'$new_version'}; fs.writeFileSync('$VERSION_FILE', JSON.stringify(data, null, 2));"
 
-          echo "new_version=$new_version" >> $GITHUB_ENV
+        # Exporter pour steps suivants
+        echo "new_version=$new_version" >> $GITHUB_ENV
 
-      - name: Commit new version
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    - name: Commit new version
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add vertion.json
+        git diff --cached --quiet || git commit -m "Bump version to ${{ env.new_version }}"
+        git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
 
-          git add vertion.json
-          git commit -m "Bump version to ${{ env.new_version }}"
-          git push
-
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ env.new_version }}
-          name: ${{ env.new_version }}
-          draft: false
-          prerelease: false
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.new_version }}
+        name: ${{ env.new_version }}
+        draft: false
+        prerelease: false
