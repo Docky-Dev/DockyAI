@@ -57,7 +57,6 @@
       overflow: hidden;
     }
     
-    /* Sidebar - Glassmorphism effect */
     .sidebar {
       width: 280px;
       background: var(--glass-bg);
@@ -242,7 +241,7 @@
   background: var(--bg-primary);
   position: relative;
   overflow: hidden;
-  height: 100vh; /* Ajoutez cette ligne */
+  height: 100vh;
 }
 
     .main-header {
@@ -327,7 +326,7 @@
   padding: 0 24px;
   position: relative;
   z-index: 2;
-  height: calc(100% - 120px); /* Ajustez selon vos besoins */
+  height: calc(100% - 120px);
 }
     
 .messages-container {
@@ -335,10 +334,9 @@
   overflow-y: auto;
   padding: 24px 0;
   scroll-behavior: smooth;
-  max-height: calc(100vh - 200px); /* Ajustez cette valeur */
+  max-height: calc(100vh - 200px);
 }
     
-    /* Welcome screen with animated gradient */
     .welcome-screen {
       flex: 1;
       display: flex;
@@ -383,7 +381,6 @@
       line-height: 1.6;
     }
     
-    /* Message bubbles with smooth entrance */
     .message-group {
       margin: 24px 0;
       opacity: 0;
@@ -673,7 +670,6 @@
       }
     }
     
-    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -691,7 +687,6 @@
       background: var(--text-muted);
     }
     
-    /* Responsive design */
     @media (max-width: 768px) {
       .sidebar {
         position: fixed;
@@ -728,7 +723,6 @@
       }
     }
     
-    /* Mobile menu toggle */
     .mobile-menu-toggle {
       display: none;
       position: fixed;
@@ -762,7 +756,6 @@
       }
     }
     
-    /* Loading animation */
     @keyframes pulse {
       0%, 100% {
         opacity: 0.5;
@@ -800,7 +793,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Optional: add padding-top for spacing */
   padding-top: 12px;
 }
 
@@ -809,8 +801,6 @@
   border-radius: 15px;
   font-weight: 600;
   margin: 4px 0;
-  /* Remove position: center !important; and background: var(--primary); */
-  /* Center text inside button */
   justify-content: center;
 }
 
@@ -846,7 +836,6 @@
     color: var(--text-muted);
   }
   .sidebar-menu .new-chat-btn {
-    /* retire le style spécifique, hérite de .menu-item */
     position: center !important;
     background: var(--primary);
     color: white;
@@ -864,7 +853,6 @@
   </style>
 </head>
 <body>
-  <!-- Floating background shapes -->
   <div class="floating-shapes">
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
@@ -906,7 +894,6 @@
             <path d="M6 9l6 6 6-6"/>
           </svg>
           <div class="model-dropdown" id="model-dropdown">
-            <!-- Model options will be added here dynamically -->
           </div>
         </div>
       </div>
