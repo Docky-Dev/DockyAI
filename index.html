@@ -949,7 +949,7 @@
     // Available models
     const MODELS = {
       "Docky 4i": "@preset/docky-4i",
-      "DockyAI 4i": "@preset/docky-ai",
+      "DockyAI 3i": "@preset/docky-ai",
       "DockyAI 2.1": "google/gemini-2.5-flash-lite-preview-06-17",
       "OpenAI: gpt-oss-20b": "openai/gpt-oss-20b:free",
       "DeepSeek: DeepSeek V3 0324": "deepseek/deepseek-chat-v3-0324:free",
@@ -1127,7 +1127,7 @@
       conversations[id] = {
         id,
         name: "New Chat",
-        model: "openai/gpt-oss-20b:free",
+        model: "@preset/docky-4i",
         messages: [],
         active: false,
         createdAt: new Date().toISOString()
