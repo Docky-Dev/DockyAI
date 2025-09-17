@@ -888,7 +888,7 @@
     <div class="main-content">
       <div class="main-header">
         <div class="model-selector" id="model-selector">
-          <span id="current-model">DockyAI 3i</span>
+          <span id="current-model">DockyAI 4i</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 9l6 6 6-6"/>
           </svg>
@@ -948,7 +948,8 @@
     
     // Available models
     const MODELS = {
-      "DockyAI 3i": "openai/gpt-oss-20b:free",
+      "Docky 4i": "@preset/docky-4i",
+      "DockyAI 4i": "@preset/docky-ai",
       "DockyAI 2.1": "google/gemini-2.5-flash-lite-preview-06-17",
       "OpenAI: gpt-oss-20b": "openai/gpt-oss-20b:free",
       "DeepSeek: DeepSeek V3 0324": "deepseek/deepseek-chat-v3-0324:free",
@@ -1062,7 +1063,7 @@
       updateUI();
       
       // Update current model display
-      const modelName = Object.keys(MODELS).find(key => MODELS[key] === modelId) || "DockyAI 3i";
+      const modelName = Object.keys(MODELS).find(key => MODELS[key] === modelId) || "DockyAI 4i";
       const currentModelElement = document.getElementById('current-model');
       if (currentModelElement) currentModelElement.textContent = modelName;
       
@@ -1341,7 +1342,7 @@
     function updateUI() {
       const currentConv = conversations[currentConversationId];
       if (currentConv) {
-        const modelName = Object.keys(MODELS).find(key => MODELS[key] === currentConv.model) || "DockyAI 3i";
+        const modelName = Object.keys(MODELS).find(key => MODELS[key] === currentConv.model) || "DockyAI 4i";
         const currentModelElement = document.getElementById('current-model');
         if (currentModelElement) currentModelElement.textContent = modelName;
       }
