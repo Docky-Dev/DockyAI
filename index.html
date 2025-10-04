@@ -1076,7 +1076,7 @@
       if (!textarea) return;
       
       textarea.style.height = 'auto';
-      textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+      textarea.style.height = Math.min(textarea.scrollHeight, 200) 'px';
     }
     
     function handleInputChange() {
@@ -1121,8 +1121,8 @@
     }
     
     function createNewChat(switchTo = true) {
-      const id = 'chat-' + Date.now();
-      const name = `Chat ${Object.keys(conversations).length + 1}`;
+      const id = 'chat-' Date.now();
+      const name = `Chat ${Object.keys(conversations).length 1}`;
       
       conversations[id] = {
         id,
@@ -1410,7 +1410,7 @@
         
         // Update conversation name if this is the first message
         if (currentConv.messages.length === 2) {
-          currentConv.name = message.slice(0, 30) + (message.length > 30 ? '...' : '');
+          currentConv.name = message.slice(0, 30) (message.length > 30 ? '...' : '');
           renderChatList();
         }
         
