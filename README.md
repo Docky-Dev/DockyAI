@@ -7,7 +7,7 @@ DockyAI is a modern platform that centralizes access to around twenty different 
 - **Modern and intuitive interface**  
   Enjoy a polished user experience designed for efficiency and simplicity.
 
-- **Access to 20+ AIs**  
+- **Access to 30+ AIs**  
   Choose from a variety of popular AI models, each available directly within DockyAI.
 
 - **Centralized platform**  
