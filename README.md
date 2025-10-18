@@ -51,4 +51,11 @@ This project is licensed under the MIT License.
 
 ---
 
+## 👤 Author
+
+**Project developed by [GraphStats](https://github.com/GraphStats)**
+
+---
+
 DockyAI – All your favorite AIs, centralized.
+
