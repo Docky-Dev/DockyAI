@@ -2,15 +2,13 @@ name: Fetch MrBeast Subs
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # toutes les 5 minutes
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
   fetch_subs:
     runs-on: ubuntu-latest
-
     steps:
-      # Étape 1 : Décider si on lance le workflow (60% de chance)
       - name: Decide if run
         id: decide
         run: |
@@ -20,7 +18,6 @@ jobs:
             echo "run=false" >> $GITHUB_OUTPUT
           fi
 
-      # Étape 2 : Installer Node.js et générer le token d'installation pour ton App
       - name: Generate App installation token
         if: steps.decide.outputs.run == 'true'
         uses: actions/setup-node@v3
@@ -44,21 +41,18 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
 
-      # Étape 3 : Cloner le repo avec le token de ton App
       - name: Checkout repo
         if: steps.decide.outputs.run == 'true'
         uses: actions/checkout@v4
         with:
           token: ${{ steps.generate_token.outputs.token }}
 
-      # Étape 4 : Récupérer le nombre d'abonnés
       - name: Fetch subscriber count
         if: steps.decide.outputs.run == 'true'
         run: |
           curl -s https://backend.mixerno.space/api/youtube/estv3/UCX6OQ3DkcsbYNE6H8uQQuVA \
           | jq '{subscriberCount: .items[0].statistics.subscriberCount}' > mrbeast.json
 
-      # Étape 5 : Commit et push le fichier
       - name: Commit and push
         if: steps.decide.outputs.run == 'true'
         run: |
@@ -69,6 +63,3 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          APP_ID: ${{ secrets.APP_ID }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
