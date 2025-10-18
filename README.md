@@ -55,5 +55,5 @@ This project is licensed under the MIT License.
 
 ---
 
-DockyAI – All your favorite AIs, centralized.
+**DockyAI – All your favorite AIs, centralized.**
 
