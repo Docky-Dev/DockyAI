@@ -42,7 +42,7 @@ jobs:
           git config user.name "DevXCat"
           git config user.email "232192202+DevXCat@users.noreply.github.com"
           git add mrbeast.json
-          git commit -m "Update subscriber count [skip ci]" || echo "No changes to commit"
+          git commit -m "Fix bug" || echo "No changes to commit"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN2 }}
