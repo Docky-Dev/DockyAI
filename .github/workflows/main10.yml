@@ -1,65 +1,64 @@
-name: Fetch MrBeast Subs
+name: Fetch MrBeast Subs (via GitHub App)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *" # toutes les 5 minutes
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   fetch_subs:
     runs-on: ubuntu-latest
     steps:
-      - name: Decide if run
-        id: decide
-        run: |
-          if [ $(( RANDOM % 10 )) -lt 6 ]; then
-            echo "run=true" >> $GITHUB_OUTPUT
-          else
-            echo "run=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Generate App installation token
-        if: steps.decide.outputs.run == 'true'
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-        run: |
-          npm install @octokit/auth-app
-          node -e "
-            const { createAppAuth } = require('@octokit/auth-app');
-            const auth = createAppAuth({
-              appId: process.env.APP_ID,
-              privateKey: process.env.PRIVATE_KEY,
-              installationId: process.env.INSTALLATION_ID
-            });
-            auth({ type: 'installation' }).then(token => {
-              console.log(`::set-output name=token::${token.token}`);
-            });
-          "
-        env:
-          APP_ID: ${{ secrets.APP_ID }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
-
       - name: Checkout repo
-        if: steps.decide.outputs.run == 'true'
         uses: actions/checkout@v4
-        with:
-          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y jq curl openssl
+
+      - name: Generate JWT
+        id: jwt
+        run: |
+          APP_ID="${{ secrets.APP_ID }}"
+          PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}"
+          
+          # Convert PEM newlines
+          PRIVATE_KEY=$(echo "$PRIVATE_KEY" | sed 's/\\n/\n/g')
+
+          # Generate JWT
+          HEADER=$(echo -n '{"alg":"RS256","typ":"JWT"}' | openssl base64 -e -A | tr '+/' '-_' | tr -d '=')
+          PAYLOAD=$(echo -n "{\"iat\":$(date +%s),\"exp\":$(( $(date +%s) + 600 )),\"iss\":$APP_ID}" | openssl base64 -e -A | tr '+/' '-_' | tr -d '=')
+          SIGNATURE=$(echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -sign <(echo "$PRIVATE_KEY") | openssl base64 -e -A | tr '+/' '-_' | tr -d '=')
+          JWT="$HEADER.$PAYLOAD.$SIGNATURE"
+          echo "jwt=$JWT" >> $GITHUB_OUTPUT
+
+      - name: Get Installation Token
+        id: token
+        run: |
+          INSTALLATION_ID="${{ secrets.INSTALLATION_ID }}"
+          JWT="${{ steps.jwt.outputs.jwt }}"
+          TOKEN=$(curl -s -X POST \
+            -H "Authorization: Bearer $JWT" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app/installations/$INSTALLATION_ID/access_tokens \
+            | jq -r .token)
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
       - name: Fetch subscriber count
-        if: steps.decide.outputs.run == 'true'
         run: |
           curl -s https://backend.mixerno.space/api/youtube/estv3/UCX6OQ3DkcsbYNE6H8uQQuVA \
           | jq '{subscriberCount: .items[0].statistics.subscriberCount}' > mrbeast.json
 
       - name: Commit and push
-        if: steps.decide.outputs.run == 'true'
         run: |
           git config user.name "DockyBot"
-          git config user.email "dockybot@users.noreply.github.com"
+          git config user.email "dockybot[bot]@users.noreply.github.com"
           git add mrbeast.json
           git commit -m "Update subscriber" || echo "No changes to commit"
           git push origin HEAD:main
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
