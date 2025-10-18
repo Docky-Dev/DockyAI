@@ -1,0 +1,65 @@
+name: Fetch MrBeast Subs
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  fetch_subs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide if run
+        id: decide
+        run: |
+          if [ $(( RANDOM % 10 )) -lt 6 ]; then
+            echo "run=true" >> $GITHUB_OUTPUT
+          else
+            echo "run=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate App installation token
+        if: steps.decide.outputs.run == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+        run: |
+          npm install @octokit/auth-app
+          node -e "
+            const { createAppAuth } = require('@octokit/auth-app');
+            const auth = createAppAuth({
+              appId: process.env.APP_ID,
+              privateKey: process.env.PRIVATE_KEY,
+              installationId: process.env.INSTALLATION_ID
+            });
+            auth({ type: 'installation' }).then(token => {
+              console.log(`::set-output name=token::${token.token}`);
+            });
+          "
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
+
+      - name: Checkout repo
+        if: steps.decide.outputs.run == 'true'
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Fetch subscriber count
+        if: steps.decide.outputs.run == 'true'
+        run: |
+          curl -s https://backend.mixerno.space/api/youtube/estv3/UCX6OQ3DkcsbYNE6H8uQQuVA \
+          | jq '{subscriberCount: .items[0].statistics.subscriberCount}' > mrbeast.json
+
+      - name: Commit and push
+        if: steps.decide.outputs.run == 'true'
+        run: |
+          git config user.name "DockyBot"
+          git config user.email "dockybot@users.noreply.github.com"
+          git add mrbeast.json
+          git commit -m "Update subscriber" || echo "No changes to commit"
+          git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
