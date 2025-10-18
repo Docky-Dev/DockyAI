@@ -39,7 +39,7 @@ jobs:
       - name: Commit and push
         if: steps.decide.outputs.run == 'true'
         run: |
-          git config user.name "DevXCat"
+          git config user.name "hopedev-pixel"
           git config user.email "232192202+DevXCat@users.noreply.github.com"
           git add mrbeast.json
           git commit -m "Update subscriber count [skip ci]" || echo "No changes to commit"
