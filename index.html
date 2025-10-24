@@ -723,22 +723,22 @@
       }
     }
     
-    .mobile-menu-toggle {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--accent-gradient);
-      color: white;
-      border: none;
-      cursor: pointer;
-      z-index: 100;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-      transition: var(--transition-medium);
-    }
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transition: var(--transition-medium);
+}
     
     .mobile-menu-toggle:hover {
       transform: translateY(-3px) scale(1.05);
@@ -748,13 +748,42 @@
       transform: translateY(0);
     }
     
-    @media (max-width: 768px) {
-      .mobile-menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
+@media (max-width: 768px) {
+  .input-area {
+    padding: 16px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 10;
+  }
+
+  .input-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 20px;
+    left: 20px;
+  }
+
+  .chat-area {
+    padding-bottom: 100px; /* Espace pour l'input en bas */
+    height: calc(100vh - 80px);
+  }
+
+  .messages-container {
+    max-height: calc(100vh - 180px);
+  }
+}
     
     @keyframes pulse {
       0%, 100% {
