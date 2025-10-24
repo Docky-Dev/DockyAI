@@ -723,22 +723,22 @@
       }
     }
     
-.mobile-menu-toggle {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent-gradient);
-  color: white;
-  border: none;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  transition: var(--transition-medium);
-}
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      transition: var(--transition-medium);
+    }
     
     .mobile-menu-toggle:hover {
       transform: translateY(-3px) scale(1.05);
@@ -748,42 +748,13 @@
       transform: translateY(0);
     }
     
-@media (max-width: 768px) {
-  .input-area {
-    padding: 16px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 10;
-  }
-
-  .input-container {
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .mobile-menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 20px;
-    left: 20px;
-  }
-
-  .chat-area {
-    padding-bottom: 100px; /* Espace pour l'input en bas */
-    height: calc(100vh - 80px);
-  }
-
-  .messages-container {
-    max-height: calc(100vh - 180px);
-  }
-}
+    @media (max-width: 768px) {
+      .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
     
     @keyframes pulse {
       0%, 100% {
@@ -879,6 +850,38 @@
   .sidebar-menu .new-chat-btn:active {
     color: white;
   }
+
+  /* Styles pour le bouton menu dans la zone de saisie mobile */
+  .mobile-menu-button {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    transition: var(--transition-medium);
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-button:hover {
+    background: var(--accent-primary);
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-menu-button {
+      display: flex;
+    }
+    
+    .input-wrapper {
+      padding: 8px 12px;
+    }
+  }
   </style>
 </head>
 <body>
@@ -950,6 +953,12 @@
       <div class="input-area">
         <div class="input-container">
           <div class="input-wrapper">
+            <!-- Bouton menu ajouté ici -->
+            <button class="mobile-menu-button" id="mobile-menu-button-input">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+              </svg>
+            </button>
             <textarea 
               id="message-input" 
               placeholder="Message DockyAI..." 
@@ -965,11 +974,7 @@
       </div>
     </div>
     
-    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 12h18M3 6h18M3 18h18"/>
-      </svg>
-    </button>
+    <!-- Ancien bouton menu flottant retiré -->
   </div>
 
   <script>
@@ -1029,14 +1034,14 @@
       const sendButton = document.getElementById('send-button');
       const newChatBtn = document.getElementById('new-chat-btn');
       const modelSelector = document.getElementById('model-selector');
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+      const mobileMenuButtonInput = document.getElementById('mobile-menu-button-input');
       
       if (messageInput) messageInput.addEventListener('input', handleInputChange);
       if (messageInput) messageInput.addEventListener('keypress', handleKeyPress);
       if (sendButton) sendButton.addEventListener('click', sendMessage);
       if (newChatBtn) newChatBtn.addEventListener('click', createNewChat);
       if (modelSelector) modelSelector.addEventListener('click', toggleModelDropdown);
-      if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+      if (mobileMenuButtonInput) mobileMenuButtonInput.addEventListener('click', toggleMobileMenu);
       
       // Auto-resize textarea
       if (messageInput) messageInput.addEventListener('input', autoResizeTextarea);
