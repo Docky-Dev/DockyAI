@@ -978,8 +978,7 @@
   </div>
 
   <script>
-    const apiKey = 'YOUR-TOKEN';
-    const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
+    const apiUrl = 'http://localhost:3000/api/chat';
     
     // Available models
     const MODELS = {
@@ -1414,7 +1413,6 @@
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
             'HTTP-Referer': window.location.href,
             'X-Title': 'DockyAI'
